@@ -26,9 +26,9 @@
 @group(${bindGroup_scene}) @binding(1) var<storage, read>       lightSet : LightSet;
 @group(${bindGroup_scene}) @binding(2) var<storage, read_write> clusterSet : ClusterSet;
 
-fn ndcToView(ndc_xy: vec2<f32>, depth_view: f32, invProj: mat4x4f) -> vec3<f32> {
-    let clipNear = vec4<f32>(ndc_xy.x, ndc_xy.y, -1.0, 1.0);
-    let clipFar  = vec4<f32>(ndc_xy.x, ndc_xy.y,  1.0, 1.0);
+fn ndcToView(ndc: vec2<f32>, depth_view: f32, invProj: mat4x4f) -> vec3<f32> {
+    let clipNear = vec4<f32>(ndc.x, ndc.y, -1.0, 1.0);
+    let clipFar  = vec4<f32>(ndc.x, ndc.y,  1.0, 1.0);
 
     let vpNearH = invProj * clipNear;
     let vpFarH  = invProj * clipFar;
@@ -76,8 +76,10 @@ fn main(@builtin(global_invocation_id) globalIdx: vec3u) {
 
     let viewz = f32(globalIdx.z) / f32(ZClusters);
     let zDiff = camera.farPlane / camera.nearPlane;
-    let zmin = camera.nearPlane * pow(zDiff, viewz);
-    let zmax  = camera.farPlane * pow(zDiff, viewz);
+    let viewzMin = f32(globalIdx.z) / f32(ZClusters);
+    let viewzMax = f32(globalIdx.z + 1u) / f32(ZClusters);
+    let zmin = camera.nearPlane * pow(zDiff, viewzMin);
+    let zmax = camera.nearPlane * pow(zDiff, viewzMax);
 
     let v000 = ndcToView(ndc00, zmin, camera.invProjMat);
     let v001 = ndcToView(ndc00, zmax, camera.invProjMat);
@@ -98,8 +100,7 @@ fn main(@builtin(global_invocation_id) globalIdx: vec3u) {
 
     var count: u32 = 0u;
     let maxLights = u32(${maxLightsPerCluster});
-    //let radius = f32(${testLightRadius});
-    let radius = 2.0; // Hardcode for unknown reason
+    let radius = f32(2); // Hardcode lightRadius for unknown bug
 
     for (var i: u32 = 0u; i < lightSet.numLights; i = i + 1u) {
         if (count >= maxLights){

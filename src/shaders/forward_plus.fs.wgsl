@@ -51,7 +51,7 @@ fn main(in: FragmentInput) -> @location(0) vec4f
     let ny = clamp(ndcPos.y * 0.5 + 0.5, 0.0, 1.0);
 
     let countX = u32(clamp(floor(nx * XClusters), 0.0, XClusters - 1.0));
-    let countY = u32(clamp(floor(nx * YClusters), 0.0, YClusters - 1.0));
+    let countY = u32(clamp(floor(ny * YClusters), 0.0, YClusters - 1.0));
     
     let safeViewZ = max(-viewZ, camera.nearPlane);
     let invLogZPlane = 1.0 / log(camera.farPlane / camera.nearPlane);
