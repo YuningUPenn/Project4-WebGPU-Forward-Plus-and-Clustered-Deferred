@@ -98,7 +98,7 @@ fn main(@builtin(global_invocation_id) globalIdx: vec3u) {
 
     var count: u32 = 0u;
     let maxLights = u32(${maxLightsPerCluster});
-    let radius = f32(${lightRadius});
+    let radius = f32(${testLightRadius});
 
     for (var i: u32 = 0u; i < lightSet.numLights; i = i + 1u) {
         if (count >= maxLights){
