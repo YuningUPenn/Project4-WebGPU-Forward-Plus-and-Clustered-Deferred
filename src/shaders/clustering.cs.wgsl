@@ -99,7 +99,7 @@ fn main(@builtin(global_invocation_id) globalIdx: vec3u) {
     var count: u32 = 0u;
     let maxLights = u32(${maxLightsPerCluster});
     //let radius = f32(${testLightRadius});
-    let radius = 2; // Hardcode for unknown reason
+    let radius = 2.0; // Hardcode for unknown reason
 
     for (var i: u32 = 0u; i < lightSet.numLights; i = i + 1u) {
         if (count >= maxLights){
