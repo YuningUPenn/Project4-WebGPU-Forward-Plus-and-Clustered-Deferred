@@ -32,7 +32,6 @@ export const constants = {
 
     lightRadius: 2,
 
-    testLightRadius: 2,
     XClusters: 16,
     YClusters: 8,
     ZClusters: 24,
